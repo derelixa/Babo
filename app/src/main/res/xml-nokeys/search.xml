@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<item xmlns:tools="http://schemas.android.com/tools"
+		tools:ignore="MissingDefaultResource">
+		
+		
+		<target_code>71809</target_code>
+		<word>창문</word>
+		<sup_no>0</sup_no>
+		
+		<origin>窓門</origin>
+		
+		
+		<pronunciation>창문</pronunciation>
+		
+		
+		<word_grade>초급</word_grade>
+		
+		<pos>명사</pos>
+		<link>https://krdict.korean.go.kr/dicSearch/SearchView?ParaWordNo=71809</link>
+		
+		
+		<sense>
+			<sense_order>1</sense_order>
+			<definition>공기나 햇빛이 들어올 수 있도록 벽이나 지붕에 만들어 놓은 문.</definition>
+			<translation>
+				<trans_lang>영어</trans_lang>
+				<trans_word><![CDATA[window]]></trans_word>
+				<trans_dfn><![CDATA[An opening in the wall or roof made to let in air or light.]]></trans_dfn>
+			</translation>
+
+		</sense>
+		
+	</item>
+
+
