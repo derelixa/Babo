@@ -1,6 +1,7 @@
 package alexia.tsp.babo;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ListView;
 
 import org.w3c.dom.Document;
@@ -23,7 +24,7 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.*;
 
-public class RequestDownloadTask extends AsyncTask<String, Void, String> {
+public class RequestDownloadTask extends AsyncTask<String, Void, ArrayList> {
 
     private final SearchResults activity;
     private final String url;
@@ -31,15 +32,12 @@ public class RequestDownloadTask extends AsyncTask<String, Void, String> {
     public RequestDownloadTask(SearchResults activity, String URL) {
         this.activity = activity;
         this.url = URL;
-        System.out.println("début");
+        Log.i("alexia", "start");
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected ArrayList doInBackground(String... string) {
         List item = new ArrayList();
-        String kWord = null;
-        String enWord = null;
-        String def = null;
 
         try {
             URL url = new URL(this.url);
@@ -55,8 +53,14 @@ public class RequestDownloadTask extends AsyncTask<String, Void, String> {
             myParser.setInput(stream, null);
             myParser.nextTag();
 
+            Log.i("alexia", "do in bcgd");
             item = readFeed(myParser);
-            stream.close();
+
+
+
+            return (ArrayList) item;
+
+
         }
         catch (XmlPullParserException e) {
             e.printStackTrace();
@@ -81,34 +85,11 @@ public class RequestDownloadTask extends AsyncTask<String, Void, String> {
                 continue;
             }
             String name = parser.getName();
-            // Starts by looking for the entry tag
+            // Starts by looking for the item tag
             if (name.equals("item")) {
-                item.add(readVocab(parser));
+                readTitle(parser);
             } else {
                 skip(parser);
-            }
-        }
-        return item;
-    }
-
-    //Process the feed and look for the entry point (will only work for this specidic API)
-    public List readVocab(XmlPullParser myParser) throws IOException, XmlPullParserException {
-        myParser.require(XmlPullParser.START_TAG, null, "item");
-        List item = null;
-        String kWord = null;
-        String enWord = null;
-        String def = null;
-
-        while (myParser.next() != XmlPullParser.END_TAG) {
-            if (myParser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = myParser.getName();
-            if (name.equals("word")) {
-                kWord = readTitle(myParser);
-                item.add(kWord);
-            } else {
-                skip(myParser);
             }
         }
         return item;
@@ -148,7 +129,6 @@ public class RequestDownloadTask extends AsyncTask<String, Void, String> {
             }
         }
     }
-
 
 
     public InputStream getInputStream(URL url) {

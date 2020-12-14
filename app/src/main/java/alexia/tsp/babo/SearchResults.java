@@ -28,8 +28,7 @@ public class SearchResults extends AppCompatActivity {
 
 
     public void callBackData(ArrayList item) {
-        word.setText((CharSequence) item.get(0));
-        trad.setText((CharSequence) item.get(1));
+        word.setText((String) item.get(0));
         }
 
 
