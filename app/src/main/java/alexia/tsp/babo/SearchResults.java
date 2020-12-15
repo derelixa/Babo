@@ -2,14 +2,17 @@ package alexia.tsp.babo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class SearchResults extends AppCompatActivity {
-
-    private static final String url = "https://krdict.korean.go.kr/api/search?certkey_no=2121&key=1256AA71A62E288E936958B03CDB3DD7&type_search=search&method=WORD_INFO&part=word&sort=dict&translated=y&trans_lang=1&go=exam&q=%EC%B0%BD%EB%AC%B8";
     TextView word;
     TextView trad;
 
@@ -18,18 +21,31 @@ public class SearchResults extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
 
-        word = (TextView)findViewById(R.id.tvWord);
-        trad = (TextView)findViewById(R.id.tvTrad);
+        word = (TextView) findViewById(R.id.tvWord);
+        trad = (TextView) findViewById(R.id.tvTrad);
 
-        Bundle extras = getIntent().getExtras();
-        //String researchword = new String(extras.getString("word"));
-        new RequestDownloadTask(this,url).execute();
+
+
+
+        Button bSearch = (Button) findViewById(R.id.bSearch);
+        bSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText etSearch = (EditText) findViewById(R.id.etSearch);
+                String rword = etSearch.getText().toString();
+                Log.i("SR", rword);
+                getDLTask(word, trad).execute(rword);
+
+            }
+        });
+
     }
 
-
-    public void callBackData(ArrayList item) {
-        word.setText((String) item.get(0));
-        }
-
-
+    private RequestDownloadTask getDLTask(TextView word, TextView trad) {
+        return new RequestDownloadTask(word, trad);
     }
+
+}
+
+
+

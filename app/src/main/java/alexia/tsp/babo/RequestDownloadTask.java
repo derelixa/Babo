@@ -1,19 +1,26 @@
 package alexia.tsp.babo;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -26,109 +33,92 @@ import javax.xml.parsers.*;
 
 public class RequestDownloadTask extends AsyncTask<String, Void, ArrayList> {
 
-    private final SearchResults activity;
-    private final String url;
+    private final WeakReference<TextView> textViewWordWeakReference;
+    private final WeakReference<TextView> textViewTradWeakReference;
 
-    public RequestDownloadTask(SearchResults activity, String URL) {
-        this.activity = activity;
-        this.url = URL;
-        Log.i("alexia", "start");
+    public RequestDownloadTask(TextView tvWord, TextView tvTrad) {
+        textViewWordWeakReference = new WeakReference<>(tvWord);
+        textViewTradWeakReference = new WeakReference<>(tvTrad);
+    }
+
+    protected void onPreExecute() {
+        TextView tvWord = textViewWordWeakReference.get();
+        TextView tvTrad = textViewTradWeakReference.get();
+
     }
 
     @Override
-    protected ArrayList doInBackground(String... string) {
-        List item = new ArrayList();
+    protected ArrayList doInBackground(String... params) {
+        String rWord = params[0];
+        Log.i("alexia", rWord);
+        List vocab = new ArrayList();
+        List test = new ArrayList();
+        test.add(0, "error");
+        test.add(1, "error");
+        String kWord;
+        String enWord;
 
         try {
-            URL url = new URL(this.url);
+            String lien = "https://krdict.korean.go.kr/api/search?certkey_no=2121&key=1256AA71A62E288E936958B03CDB3DD7&type_search=search&method=WORD_INFO&part=word&sort=dict&translated=y&trans_lang=1";
+            Log.i("alexia", lien + "&q=" + rWord);
+            URL url = new URL(lien + "&q=" + rWord);
+
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.connect();
             InputStream stream = connection.getInputStream();
-
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            XmlPullParser myParser = factory.newPullParser();
-
-            myParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            myParser.setInput(stream, null);
-            myParser.nextTag();
-
-            Log.i("alexia", "do in bcgd");
-            item = readFeed(myParser);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(stream);
+            doc.getDocumentElement().normalize();
 
 
+            Element root = doc.getDocumentElement();
+            NodeList nList = doc.getElementsByTagName("item");
+            kWord = doc.getElementsByTagName("word").item(0).getTextContent();
+            enWord = doc.getElementsByTagName("trans_word").item(0).getTextContent();
 
-            return (ArrayList) item;
+
+            vocab.add(0,kWord);
+            vocab.add(1,enWord);
+
+            stream.close();
+
+            Log.i("alexia",(String) vocab.get(0));
 
 
-        }
-        catch (XmlPullParserException e) {
+           // for (int temp = 0; temp <nList.getLength(); temp++) {
+             //   Node nNode = nList.item(temp);
+
+                //if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                  //      Element eElement = (Element) nNode;
+                    //    item.add(eElement.getElementsByTagName("word").item(0).getTextContent());
+                   // }
+                //}
+
+            Log.i("item", "out");
+            return (ArrayList) vocab;
+
+
+        } catch (ProtocolException e) {
             e.printStackTrace();
-            return null;
-        }
-        catch (MalformedURLException e) {
+            return (ArrayList) test;
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-            return null;
-        }
-        catch (IOException e) {
+            return (ArrayList) test;
+        } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return (ArrayList) test;
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+            return (ArrayList) test;
+        } catch (SAXException e) {
+            e.printStackTrace();
+            return (ArrayList) test;
         }
     }
 
-    private List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List item = new ArrayList();
 
-        parser.require(XmlPullParser.START_TAG, null, "feed");
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            // Starts by looking for the item tag
-            if (name.equals("item")) {
-                readTitle(parser);
-            } else {
-                skip(parser);
-            }
-        }
-        return item;
-    }
-
-
-    private String readTitle (XmlPullParser myParser) throws IOException, XmlPullParserException {
-        myParser.require(XmlPullParser.START_TAG, null, "word");
-        String word = readText(myParser);
-        myParser.require(XmlPullParser.END_TAG, null, "word");
-        return word;
-    }
-
-    private String readText (XmlPullParser myParser) throws IOException, XmlPullParserException {
-        String result = "";
-        if (myParser.next() == XmlPullParser.TEXT) {
-            result = myParser.getText();
-            myParser.nextTag();
-        }
-        return result;
-    }
-
-    // Skip tags I don't care about
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
-            throw new IllegalStateException();
-        }
-        int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
-                case XmlPullParser.END_TAG:
-                    depth--;
-                    break;
-                case XmlPullParser.START_TAG:
-                    depth++;
-                    break;
-            }
-        }
-    }
 
 
     public InputStream getInputStream(URL url) {
@@ -140,9 +130,12 @@ public class RequestDownloadTask extends AsyncTask<String, Void, ArrayList> {
     }
 
 
-    @Override
-    protected void onPostExecute(ArrayList item){
-        activity.callBackData(item);
+    protected void onPostExecute(ArrayList vocab) {
+        TextView tvWord = textViewWordWeakReference.get();
+        tvWord.setText((String) vocab.get(0));
+        TextView tvTrad = textViewTradWeakReference.get();
+        tvTrad.setText((String) vocab.get(1));
+        vocab.clear();
     }
 }
 
