@@ -3,18 +3,21 @@ package alexia.tsp.babo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class SearchResults extends AppCompatActivity {
     TextView word;
     TextView trad;
+    ArrayList voc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,18 +26,42 @@ public class SearchResults extends AppCompatActivity {
 
         word = (TextView) findViewById(R.id.tvWord);
         trad = (TextView) findViewById(R.id.tvTrad);
-
-
+        MyDatabase db = new MyDatabase(this);
 
 
         Button bSearch = (Button) findViewById(R.id.bSearch);
+        bSearch.setBackgroundColor(Color.parseColor("#E6007E"));
         bSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText etSearch = (EditText) findViewById(R.id.etSearch);
-                String rword = etSearch.getText().toString();
-                Log.i("SR", rword);
-                getDLTask(word, trad).execute(rword);
+                if (etSearch.getText().toString().matches("")) {
+                    Toast.makeText(SearchResults.this, "Please enter a word !", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                else {
+                    String rword = etSearch.getText().toString();
+                    Log.i("SR", rword);
+                    getDLTask(word, trad).execute(rword);
+                }
+
+            }
+        });
+
+        Button bS = (Button) findViewById(R.id.bSend);
+        bS.setBackgroundColor(Color.parseColor("#E6007E"));
+        bS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (word.getText().toString().matches("Researched word")) {
+                    Toast.makeText(SearchResults.this, "Please enter a word !", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                else {
+                    Vocab rS = new Vocab(word.getText().toString(), trad.getText().toString());
+                    db.insertData(rS);
+                    Toast.makeText(SearchResults.this, "ADDED !", Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -46,6 +73,5 @@ public class SearchResults extends AppCompatActivity {
     }
 
 }
-
 
 

@@ -6,4 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".Revision">
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="153dp"
+        tools:layout_editor_absoluteY="317dp">
+
+
+
+        <ListView
+            android:id="@+id/list_vocab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/cardview_shadow_start_color" />
+
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,7 +60,7 @@ public class RequestDownloadTask extends AsyncTask<String, Void, ArrayList> {
 
         try {
             String lien = "https://krdict.korean.go.kr/api/search?certkey_no=2121&key=1256AA71A62E288E936958B03CDB3DD7&type_search=search&method=WORD_INFO&part=word&sort=dict&translated=y&trans_lang=1";
-            Log.i("alexia", lien + "&q=" + rWord);
+            //Log.i("alexia", lien + "&q=" + rWord);
             URL url = new URL(lien + "&q=" + rWord);
 
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -84,7 +84,7 @@ public class RequestDownloadTask extends AsyncTask<String, Void, ArrayList> {
 
             stream.close();
 
-            Log.i("alexia",(String) vocab.get(0));
+            //Log.i("alexia",(String) vocab.get(0));
 
 
            // for (int temp = 0; temp <nList.getLength(); temp++) {

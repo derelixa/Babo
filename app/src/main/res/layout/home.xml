@@ -10,40 +10,37 @@
 
     <Button
         android:id="@+id/bSearchA"
-        android:layout_width="226dp"
-        android:layout_height="115dp"
-        android:layout_marginTop="61dp"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
         android:text="@string/tBSearch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.151" />
+        app:layout_constraintVertical_bias="0.513" />
 
     <Button
         android:id="@+id/bReviseA"
         android:layout_width="300dp"
         android:layout_height="100dp"
+        android:layout_marginTop="48dp"
         android:text="@string/tBRevise"
-        app:layout_constraintBottom_toTopOf="@+id/bQuizzA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bSearchA"
-        app:layout_constraintVertical_bias="0.841" />
+        app:layout_constraintTop_toBottomOf="@+id/bSearchA" />
 
-    <Button
-        android:id="@+id/bQuizzA"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:text="@string/tbQuizz"
+    <ImageView
+        android:id="@+id/Babologo"
+        android:layout_width="187dp"
+        android:layout_height="143dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.844" />
+        app:layout_constraintVertical_bias="0.144"
+        app:srcCompat="@drawable/babologo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
