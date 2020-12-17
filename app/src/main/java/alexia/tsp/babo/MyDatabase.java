@@ -52,7 +52,7 @@ public class MyDatabase extends SQLiteOpenHelper {
     public ArrayList<Vocab> readData(){
         ArrayList<Vocab> listV = new ArrayList<Vocab>();
         Log.i("alexia", "Reading database...");
-        String select = new String("SELECT * from " + DATABASE_TABLE_NAME);
+        String select = new String("SELECT DISTINCT *  from " + DATABASE_TABLE_NAME);
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(select, null);
         Log.i("alexia", "Number of entries: " + cursor.getCount());
@@ -67,8 +67,11 @@ public class MyDatabase extends SQLiteOpenHelper {
         return listV;
     }
 
-    public void deleteDuplicates(){
-        getWritableDatabase().execSQL("delete from KWORD where  not in (SELECT MIN(_id ) FROM post GROUP BY post_id)");
+
+
+    public Cursor getData(String sql){
+        SQLiteDatabase database = getReadableDatabase();
+        return database.rawQuery(sql, null);
     }
 
 
