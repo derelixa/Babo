@@ -57,9 +57,11 @@ public class SearchResults extends AppCompatActivity {
                     Toast.makeText(SearchResults.this, "Please enter a word !", Toast.LENGTH_LONG).show();
                     return;
                 }
-                //else if (db.CheckIsDataAlreadyInDBorNot(word.getText().toString()) == false ) {
-                  //  Toast.makeText(SearchResults.this, "Already in !", Toast.LENGTH_LONG).show();
-               // }
+                Log.i("test",word.getText().toString() );
+
+                if (db.CheckIsDataAlreadyInDBorNot(word.getText().toString()) == false ) {
+                    Toast.makeText(SearchResults.this, "Already in !", Toast.LENGTH_LONG).show();
+                }
                 else {
                     Vocab rS = new Vocab(word.getText().toString(), trad.getText().toString());
                    // Cherche à tester si le mot est déjà dans la base de données pour ne pas le rajouter --> cause une erreur
@@ -67,10 +69,10 @@ public class SearchResults extends AppCompatActivity {
                     //String select = "SELECT * DATABASE_TABLE_NAME WHERE KEY_WORD = '"+word.getText().toString() + "'";
                     //if(db.getData(select).getCount()>0){
                     //    Toast.makeText(getApplicationContext(), "Already Exist!", Toast.LENGTH_SHORT).show();}
-                    else {
+                    //else {
                         db.insertData(rS);
                         Toast.makeText(SearchResults.this, "ADDED !", Toast.LENGTH_LONG).show();
-                    }
+                    //}
                 }
 
             }

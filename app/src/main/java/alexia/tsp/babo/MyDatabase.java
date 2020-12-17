@@ -60,21 +60,32 @@ public class MyDatabase extends SQLiteOpenHelper {
             cursor.moveToFirst();do {
                 Vocab v = new Vocab(cursor.getString(cursor.getColumnIndex(KEY_WORD)), cursor.getString(cursor.getColumnIndex(KEY_TRAD)));
                 listV.add(v);
-
                 Log.i("alexia", "Reading: " + cursor.getString(cursor.getColumnIndex(KEY_WORD)));
             } while (cursor.moveToNext());
         }
         return listV;
     }
 
+    public boolean CheckIsDataAlreadyInDBorNot(String fieldValue) {
+        SQLiteDatabase db = getReadableDatabase();
+        String select = new String("SELECT DISTINCT *  from " + DATABASE_TABLE_NAME);
+        Cursor cursor = db.rawQuery(select, null);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();do {
+                if (cursor.getString(cursor.getColumnIndex(KEY_WORD)).equals(fieldValue)) {
+                    return false;
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return true;
+    }
 
 
     public Cursor getData(String sql){
         SQLiteDatabase database = getReadableDatabase();
         return database.rawQuery(sql, null);
     }
-
-
 
 
 }
