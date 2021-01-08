@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -72,15 +73,23 @@ public class RequestDownloadTask extends AsyncTask<String, Void, ArrayList> {
             Document doc = builder.parse(stream);
             doc.getDocumentElement().normalize();
 
-
             Element root = doc.getDocumentElement();
             NodeList nList = doc.getElementsByTagName("item");
-            kWord = doc.getElementsByTagName("word").item(0).getTextContent();
-            enWord = doc.getElementsByTagName("trans_word").item(0).getTextContent();
 
+            if (nList.getLength() == 0) {
+                Log.i("test error", String.valueOf(nList.getLength()));
+                vocab.add(0,"not a word");
+                vocab.add(1,"not a word");
+            }
+            else {
+                Log.i("test yes", String.valueOf(nList.getLength()));
+                kWord = doc.getElementsByTagName("word").item(0).getTextContent();
+                enWord = doc.getElementsByTagName("trans_word").item(0).getTextContent();
+                vocab.add(0,kWord);
+                vocab.add(1,enWord);
 
-            vocab.add(0,kWord);
-            vocab.add(1,enWord);
+            }
+
 
             stream.close();
 
